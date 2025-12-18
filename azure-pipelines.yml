@@ -44,12 +44,63 @@ stages:
               version: 'v1.26.0'
               dir: 'D:\antim_sangram\infra_code\environment\dev'
 
+
+  - stage: plan
+    jobs:
+      - job: 
+        displayName: plan
+        steps:
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'plan'
               workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
               environmentServiceNameAzureRM: 'connection-1'
+
+  - stage: manualvalidation
+    displayName: manualvalidation
+    pool: server
+    dependsOn: init
+    jobs:
+      - job: 
+        steps:
+         - task: ManualValidation@1
+           inputs:
+             notifyUsers: 'niteshrao40m@gmail.com'
+             instructions: 'New infra deployment requirement by client'
+
+  
+  - stage: apply
+    displayName: "deploy-stage-apply"
+    pool:
+     name: agentxyz1
+
+    jobs:
+    - job: deployjob
+      displayName: "Terraform Apply Job"
+
+      steps:
+
+        - task: TerraformTask@5
+          displayName: "Terraform Init (Deploy)"
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
+            backendServiceArm: 'connection-1'
+            backendAzureRmStorageAccountName: 'niteshstg1'
+            backendAzureRmContainerName: 'niteshcont1'
+            backendAzureRmKey: 'dev1.terraform.tfstate'
+            commandOptions: '-reconfigure'
+
+        - task: TerraformTask@5
+          displayName: "Terraform Apply"
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
+            environmentServiceNameAzureRM: 'connection-1'
+
 
           
 
