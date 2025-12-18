@@ -1,105 +1,119 @@
 trigger:
- branches:
-   include:
-     - none
-     - main
+  branches:
+    include:
+      - main
 
 pool:
   name: agentxyz1
 
+variables:
+  tf_working_dir: 'D:\antim_sangram\infra_code\environment\dev'
+  tf_version: '1.14.3'
+
+# ================= INIT =================
 stages:
-  - stage: init
-    jobs:
-      - job: buildjob
-        displayName: init
-        steps:
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.14.3'
-         
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-              backendServiceArm: 'connection-1'
-              backendAzureRmStorageAccountName: 'niteshstg1'
-              backendAzureRmContainerName: 'niteshcont1'
-              backendAzureRmKey: 'nits.terraform.tfstate'
-          
+- stage: init
+  displayName: Terraform Init
+  jobs:
+  - job: init_job
+    steps:
+    - task: TerraformInstaller@1
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: $(tf_version)
 
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'validate'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: azurerm
+        command: init
+        workingDirectory: $(tf_working_dir)
+        backendServiceArm: connection-1
+        backendAzureRmStorageAccountName: niteshstg1
+        backendAzureRmContainerName: niteshcont1
+        backendAzureRmKey: nits.terraform.tfstate
 
-  - stage: tfsec
-    jobs:
-      - job: 
-        displayName: tfsec
-        steps:
-          - task: tfsec@1
-            inputs:
-              version: 'v1.26.0'
-              dir: 'D:\antim_sangram\infra_code\environment\dev'
+# ================= VALIDATE =================
+- stage: validate
+  displayName: Terraform Validate
+  dependsOn: init
+  jobs:
+  - job: validate_job
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Validate
+      inputs:
+        provider: azurerm
+        command: validate
+        workingDirectory: $(tf_working_dir)
 
+# ================= TFSEC =================
+- stage: tfsec
+  displayName: Terraform Security Scan
+  dependsOn: validate
+  jobs:
+  - job: tfsec_job
+    steps:
+    - task: tfsec@1
+      displayName: Run tfsec
+      inputs:
+        version: 'v1.26.0'
+        dir: $(tf_working_dir)
 
-  - stage: plan
-    jobs:
-      - job: 
-        displayName: plan
-        steps:
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-              environmentServiceNameAzureRM: 'connection-1'
+# ================= PLAN =================
+- stage: plan
+  displayName: Terraform Plan
+  dependsOn: tfsec
+  jobs:
+  - job: plan_job
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Plan
+      inputs:
+        provider: azurerm
+        command: plan
+        workingDirectory: $(tf_working_dir)
+        environmentServiceNameAzureRM: connection-1
 
-  - stage: manualvalidation
-    displayName: manualvalidation
-    pool: server
-    dependsOn: init
-    jobs:
-      - job: 
-        steps:
-         - task: ManualValidation@1
-           inputs:
-             notifyUsers: 'niteshrao40m@gmail.com'
-             instructions: 'New infra deployment requirement by client'
+# ================= MANUAL VALIDATION =================
+- stage: manualvalidation
+  displayName: Manual Approval
+  dependsOn: plan
+  pool: server
+  jobs:
+  - job: approval
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'niteshrao40m@gmail.com'
+        instructions: 'Approve Terraform Apply for Dev environment'
 
-  
-  - stage: apply
-    displayName: "deploy-stage-apply"
-    pool:
-     name: agentxyz1
+# ================= APPLY =================
+- stage: apply
+  displayName: Terraform Apply
+  dependsOn: manualvalidation
+  jobs:
+  - job: apply_job
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Init (Apply)
+      inputs:
+        provider: azurerm
+        command: init
+        workingDirectory: $(tf_working_dir)
+        backendServiceArm: connection-1
+        backendAzureRmStorageAccountName: niteshstg1
+        backendAzureRmContainerName: niteshcont1
+        backendAzureRmKey: dev1.terraform.tfstate
+        commandOptions: -reconfigure
 
-    jobs:
-    - job: deployjob
-      displayName: "Terraform Apply Job"
-
-      steps:
-
-        - task: TerraformTask@5
-          displayName: "Terraform Init (Deploy)"
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-            backendServiceArm: 'connection-1'
-            backendAzureRmStorageAccountName: 'niteshstg1'
-            backendAzureRmContainerName: 'niteshcont1'
-            backendAzureRmKey: 'dev1.terraform.tfstate'
-            commandOptions: '-reconfigure'
-
-        - task: TerraformTask@5
-          displayName: "Terraform Apply"
-          inputs:
-            provider: 'azurerm'
-            command: 'apply'
-            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-            environmentServiceNameAzureRM: 'connection-1'
+    - task: TerraformTask@5
+      displayName: Terraform Apply
+      inputs:
+        provider: azurerm
+        command: apply
+        workingDirectory: $(tf_working_dir)
+        environmentServiceNameAzureRM: connection-1
 
 
           
