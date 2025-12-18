@@ -8,7 +8,7 @@ pool:
   name: agentxyz1
 
 stages:
-  - stage: build
+  - stage: init
     jobs:
       - job: buildjob
         displayName: init
