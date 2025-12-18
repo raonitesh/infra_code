@@ -16,23 +16,23 @@ stages:
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
-
+         
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'init'
+              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
               backendServiceArm: 'connection-1'
-              backendAzureRmOverrideSubscriptionID: 'a201d6ce-420d-42ed-93d7-34c69de03add'
-              backendAzureRmResourceGroupName: 'nitesh1'
               backendAzureRmStorageAccountName: 'niteshstg1'
               backendAzureRmContainerName: 'niteshcont1'
               backendAzureRmKey: 'dev1.terraform.tfstate'
+          
 
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'validate'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
+              workingDirectory: 'D:\antim_sangram\infra_code\environment\devD:\antim_sangram\infra_code\environment\dev'
 
   - stage: tfsec
     jobs:
@@ -50,7 +50,8 @@ stages:
               command: 'plan'
               workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
               environmentServiceNameAzureRM: 'connection-1'
-              environmentAzureRmOverrideSubscriptionID: 'a201d6ce-420d-42ed-93d7-34c69de03add'
+
+          
 
           
  
