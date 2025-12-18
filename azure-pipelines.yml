@@ -9,89 +9,50 @@ pool:
 
 stages:
   - stage: build
-    displayName: "build-stage"
     jobs:
-      - job: builjob
+      - job: buildjob
+        displayName: init
         steps:
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
 
           - task: TerraformTask@5
-            displayName: terraform init
             inputs:
               provider: 'azurerm'
               command: 'init'
-              commandOptions: '-reconfigure'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
               backendServiceArm: 'connection-1'
+              backendAzureRmOverrideSubscriptionID: 'a201d6ce-420d-42ed-93d7-34c69de03add'
               backendAzureRmResourceGroupName: 'nitesh1'
               backendAzureRmStorageAccountName: 'niteshstg1'
               backendAzureRmContainerName: 'niteshcont1'
               backendAzureRmKey: 'dev1.terraform.tfstate'
-          
+
           - task: TerraformTask@5
-            displayName: terraform validate
             inputs:
               provider: 'azurerm'
               command: 'validate'
               workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-          
+
+  - stage: tfsec
+    jobs:
+      - job: 
+        displayName: tfsec
+        steps:
           - task: tfsec@1
             inputs:
               version: 'v1.26.0'
               dir: 'D:\antim_sangram\infra_code\environment\dev'
-          
-          
-          
+
           - task: TerraformTask@5
-            displayName: terraform plan
             inputs:
               provider: 'azurerm'
               command: 'plan'
               workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
               environmentServiceNameAzureRM: 'connection-1'
+              environmentAzureRmOverrideSubscriptionID: 'a201d6ce-420d-42ed-93d7-34c69de03add'
 
-  - stage: 
-    displayName: manualvalidation"
-    pool: server
-    dependsOn: rgbuilding
-    jobs:
-      - job: 
-        steps:
-         - task: ManualValidation@1
-           inputs:
-             notifyUsers: 'niteshrao40m@gmail.com'
-             instructions: 'New infra deployment requirement by client'
-  
-  - stage: rgdeploy
-    displayName: "deploy-stage-apply"
-    pool:
-     name: agentxyz1
-
-    jobs:
-    - job: deployjob
-      displayName: "Terraform Apply Job"
-
-      steps:
-
-        - task: TerraformTask@5
-          displayName: "Terraform Init (Deploy)"
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-            backendServiceArm: 'connection-1'
-            backendAzureRmStorageAccountName: 'niteshstg1'
-            backendAzureRmContainerName: 'niteshcont1'
-            backendAzureRmKey: 'dev1.terraform.tfstate'
-            commandOptions: '-reconfigure'
-
-        - task: TerraformTask@5
-          displayName: "Terraform Apply"
-          inputs:
-            provider: 'azurerm'
-            command: 'apply'
-            workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
-            environmentServiceNameAzureRM: 'connection-1'
-
+          
+ 
+        
+            
