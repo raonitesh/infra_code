@@ -25,14 +25,14 @@ stages:
               backendServiceArm: 'connection-1'
               backendAzureRmStorageAccountName: 'niteshstg1'
               backendAzureRmContainerName: 'niteshcont1'
-              backendAzureRmKey: 'dev1.terraform.tfstate'
+              backendAzureRmKey: 'nits.terraform.tfstate'
           
 
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
               command: 'validate'
-              workingDirectory: 'D:\antim_sangram\infra_code\environment\devD:\antim_sangram\infra_code\environment\dev'
+              workingDirectory: 'D:\antim_sangram\infra_code\environment\dev'
 
   - stage: tfsec
     jobs:
