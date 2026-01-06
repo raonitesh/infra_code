@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: agentxyz1
+  name: agentpool1
 
 variables:
   tf_working_dir: 'D:\antim_sangram\infra_code\environment\dev'
@@ -28,7 +28,7 @@ stages:
         provider: azurerm
         command: init
         workingDirectory: $(tf_working_dir)
-        backendServiceArm: connection-1
+        backendServiceArm: connection1
         backendAzureRmStorageAccountName: niteshstg1
         backendAzureRmContainerName: niteshcont1
         backendAzureRmKey: nits.terraform.tfstate
@@ -73,7 +73,7 @@ stages:
         provider: azurerm
         command: plan
         workingDirectory: $(tf_working_dir)
-        environmentServiceNameAzureRM: connection-1
+        environmentServiceNameAzureRM: connection1
 
 # ================= MANUAL VALIDATION =================
 - stage: manualvalidation
@@ -101,7 +101,7 @@ stages:
         provider: azurerm
         command: init
         workingDirectory: $(tf_working_dir)
-        backendServiceArm: connection-1
+        backendServiceArm: connection1
         backendAzureRmStorageAccountName: niteshstg1
         backendAzureRmContainerName: niteshcont1
         backendAzureRmKey: dev1.terraform.tfstate
@@ -113,7 +113,7 @@ stages:
         provider: azurerm
         command: apply
         workingDirectory: $(tf_working_dir)
-        environmentServiceNameAzureRM: connection-1
+        environmentServiceNameAzureRM: connection1
 
 
           
