@@ -29,9 +29,9 @@ stages:
         command: init
         workingDirectory: $(tf_working_dir)
         backendServiceArm: connection1
-        backendAzureRmStorageAccountName: niteshstg1
-        backendAzureRmContainerName: niteshcont1
-        backendAzureRmKey: nits.terraform.tfstate
+        backendAzureRmStorageAccountName: niteshstg11
+        backendAzureRmContainerName: nitsco
+        backendAzureRmKey: dev.terraform.tfstate
 
 # ================= VALIDATE =================
 - stage: validate
@@ -102,9 +102,9 @@ stages:
         command: init
         workingDirectory: $(tf_working_dir)
         backendServiceArm: connection1
-        backendAzureRmStorageAccountName: niteshstg1
-        backendAzureRmContainerName: niteshcont1
-        backendAzureRmKey: dev1.terraform.tfstate
+        backendAzureRmStorageAccountName: niteshstg11
+        backendAzureRmContainerName: nitsco
+        backendAzureRmKey: dev.terraform.tfstate
         commandOptions: -reconfigure
 
     - task: TerraformTask@5
