@@ -31,7 +31,7 @@ stages:
         backendServiceArm: connection1
         backendAzureRmStorageAccountName: niteshstg11
         backendAzureRmContainerName: nitsco
-        backendAzureRmKey: dev.terraform.tfstate
+        backendAzureRmKey: n.terraform.tfstate
 
 # ================= VALIDATE =================
 - stage: validate
@@ -104,7 +104,7 @@ stages:
         backendServiceArm: connection1
         backendAzureRmStorageAccountName: niteshstg11
         backendAzureRmContainerName: nitsco
-        backendAzureRmKey: dev.terraform.tfstate
+        backendAzureRmKey: n.terraform.tfstate
         commandOptions: -reconfigure
 
     - task: TerraformTask@5
