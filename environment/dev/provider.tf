@@ -10,7 +10,7 @@ terraform {
     resource_group_name   = "ash-rg"
     storage_account_name  = "Niteshstg11"
     container_name        = "nitsco"
-    key                   = "n.terraform.tfstate"
+    key                   = "nni.terraform.tfstate"
 
   }
 }
