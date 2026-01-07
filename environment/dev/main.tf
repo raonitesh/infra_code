@@ -5,12 +5,12 @@ module "rg" {
 }
 
 
-module "stg" {
-  source = "../../modules/azurerm_storage_account"
+# module "stg" {
+#   source = "../../modules/azurerm_storage_account"
 
-  stgs       = var.stgs
-  depends_on = [module.rg]
-}
+#   stgs       = var.stgs
+#   depends_on = [module.rg]
+# }
 
 
 

@@ -12,66 +12,66 @@ rgs = {
 
     }
   }
-  rg2 = {
-    name       = "rg-prod11"
-    location   = "west us"
-    managed_by = " managed by prod team"
-    tags = {
-      environment  = "prod"
-      project      = "project-y"
-      owner        = "prod-team"
-      project_cost = "$10"
-    }
+  # rg2 = {
+  #   name       = "rg-prod11"
+  #   location   = "west us"
+  #   managed_by = " managed by prod team"
+  #   tags = {
+  #     environment  = "prod"
+  #     project      = "project-y"
+  #     owner        = "prod-team"
+  #     project_cost = "$10"
+  #   }
 
-  }
+  # }
 }
 
-stgs = {
-  stg1 = {
-    name                     = "stg171211"
-    resource_group_name      = "rg-todo11"
-    location                 = "west us"
-    account_tier             = "Standard"
-    account_replication_type = "LRS"
+# stgs = {
+#   stg1 = {
+#     name                     = "stg171211"
+#     resource_group_name      = "rg-todo11"
+#     location                 = "west us"
+#     account_tier             = "Standard"
+#     account_replication_type = "LRS"
 
-    # Optional parameters
-    account_kind               = "StorageV2"
-    access_tier                = "Hot"
-    https_traffic_only_enabled = true
-    min_tls_version            = "TLS1_2"
-    tags = {
-      environment  = "dev"
-      project      = "project-pdg"
-      owner        = "dev-team"
-      project_cost = "$10"
-    }
-    network_rules = [
-      {
-        default_action = "Deny"
-        bypass         = ["AzureServices"]
-        ip_rules       = ["152.58.134.176"]
-      }
-    ]
-  }
-  stg2 = {
-    name                     = "stg171311"
-    resource_group_name      = "rg-prod11"
-    location                 = "west us"
-    account_tier             = "Standard"
-    account_replication_type = "LRS"
-    access_tier              = "Cold"
+#     # Optional parameters
+#     account_kind               = "StorageV2"
+#     access_tier                = "Hot"
+#     https_traffic_only_enabled = true
+#     min_tls_version            = "TLS1_2"
+#     tags = {
+#       environment  = "dev"
+#       project      = "project-pdg"
+#       owner        = "dev-team"
+#       project_cost = "$10"
+#     }
+#     network_rules = [
+#       {
+#         default_action = "Deny"
+#         bypass         = ["AzureServices"]
+#         ip_rules       = ["152.58.134.176"]
+#       }
+#     ]
+#   }
+#   stg2 = {
+#     name                     = "stg171311"
+#     resource_group_name      = "rg-prod11"
+#     location                 = "west us"
+#     account_tier             = "Standard"
+#     account_replication_type = "LRS"
+#     access_tier              = "Cold"
 
-    # Optional parameters
-    tags = {
-      environment  = "prod"
-      project      = "project-y"
-      owner        = "prod-team"
-      project_cost = "$10"
-    }
-    network_rules = []
+#     # Optional parameters
+#     tags = {
+#       environment  = "prod"
+#       project      = "project-y"
+#       owner        = "prod-team"
+#       project_cost = "$10"
+#     }
+#     network_rules = []
 
-  }
-}
+#   }
+# }
 
 vnets = {
   vnet1 = {
