@@ -8,8 +8,8 @@ terraform {
 
   backend "azurerm" {
     resource_group_name   = "ash-rg"
-    storage_account_name  = "Niteshstg11"
-    container_name        = "nitsco"
+    storage_account_name  = "Niteshstg12"
+    container_name        = "nitsco1"
     key                   = "nniterraform.tfstate"
 
   }
